@@ -27,9 +27,27 @@ class UserController extends Controller
     }
 
     /**
-     * Listar todos os usuários
-     *
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/api/v1/users",
+     *     summary="Lista todos os usuários",
+     *     tags={"Usuários"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de usuários",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array",
+     *                 @OA\Items(ref="#/components/schemas/User")
+     *             ),
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="success", type="boolean")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erro interno do servidor"
+     *     )
+     * )
      */
     public function index(): JsonResponse
     {
@@ -43,10 +61,31 @@ class UserController extends Controller
     }
 
     /**
-     * Obter usuário específico
-     *
-     * @param int $id
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/api/v1/users/{id}",
+     *     summary="Obter detalhes de um usuário específico",
+     *     tags={"Usuários"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Detalhes do usuário",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", ref="#/components/schemas/User"),
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="success", type="boolean")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Usuário não encontrado"
+     *     )
+     * )
      */
     public function show(int $id): JsonResponse
     {
@@ -60,10 +99,29 @@ class UserController extends Controller
     }
 
     /**
-     * Criar novo usuário
-     *
-     * @param UserStoreRequest $request
-     * @return JsonResponse
+     * @OA\Post(
+     *     path="/api/v1/users",
+     *     summary="Criar novo usuário",
+     *     tags={"Usuários"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/UserCreateRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Usuário criado com sucesso",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", ref="#/components/schemas/User"),
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="success", type="boolean")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erro de validação"
+     *     )
+     * )
      */
     public function store(UserStoreRequest $request): JsonResponse
     {
@@ -78,11 +136,39 @@ class UserController extends Controller
     }
 
     /**
-     * Atualizar usuário existente
-     *
-     * @param UserUpdateRequest $request
-     * @param int $id
-     * @return JsonResponse
+     * @OA\Put(
+     *     path="/api/v1/users/{id}",
+     *     summary="Atualizar usuário existente",
+     *     tags={"Usuários"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/UserUpdateRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Usuário atualizado com sucesso",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", ref="#/components/schemas/User"),
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="success", type="boolean")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Usuário não encontrado"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erro de validação"
+     *     )
+     * )
      */
     public function update(UserUpdateRequest $request, int $id): JsonResponse
     {
@@ -99,10 +185,30 @@ class UserController extends Controller
     }
 
     /**
-     * Remover usuário
-     *
-     * @param int $id
-     * @return JsonResponse
+     * @OA\Delete(
+     *     path="/api/v1/users/{id}",
+     *     summary="Remover usuário",
+     *     tags={"Usuários"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Usuário removido com sucesso",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="success", type="boolean")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Usuário não encontrado"
+     *     )
+     * )
      */
     public function destroy(int $id): JsonResponse
     {
@@ -115,10 +221,35 @@ class UserController extends Controller
     }
 
     /**
-     * Obter empréstimos do usuário
-     *
-     * @param int $id
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/api/v1/users/{id}/loans",
+     *     summary="Obter empréstimos do usuário",
+     *     tags={"Usuários"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Empréstimos do usuário",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/Loan")
+     *             ),
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="success", type="boolean")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Usuário não encontrado"
+     *     )
+     * )
      */
     public function loans(int $id): JsonResponse
     {

@@ -189,62 +189,6 @@ class LoanControllerTest extends TestCase
         ]);
     }
 
-
-    public function test_it_can_update_a_loan()
-    {
-        // Arrange
-        $loan = Loan::factory()->create([
-            'status' => LoanStatusEnum::ACTIVE->value,
-            'due_date' => Carbon::now()->addDays(7)
-        ]);
-
-        $newDueDate = Carbon::now()->addDays(14)->format('Y-m-d');
-        $updateData = [
-            'due_date' => $newDueDate
-        ];
-
-        // Act
-        $response = $this->putJson("/api/v1/loans/{$loan->id}", $updateData);
-
-        // Assert
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'data',
-                'message',
-                'success'
-            ])
-            ->assertJson([
-                'success' => true,
-                'message' => 'Empréstimo atualizado com sucesso'
-            ]);
-
-        // Verificar se a data de devolução foi atualizada
-        $this->assertDatabaseHas('loans', [
-            'id' => $loan->id,
-            'due_date' => Carbon::parse($newDueDate)->format('Y-m-d 00:00:00')
-        ]);
-    }
-
-
-    public function test_it_validates_date_when_updating_loan()
-    {
-        // Arrange
-        $loan = Loan::factory()->create();
-
-        $updateData = [
-            'due_date' => Carbon::yesterday()->format('Y-m-d')
-        ];
-
-        // Act
-        $response = $this->putJson("/api/v1/loans/{$loan->id}", $updateData);
-
-        // Assert
-        $response->assertStatus(422)
-            ->assertJsonValidationErrors(['due_date']);
-    }
-
-
-
     public function test_it_can_return_a_book()
     {
         // Arrange

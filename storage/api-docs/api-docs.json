@@ -1,0 +1,1022 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API de Biblioteca",
+        "description": "Sistema de Gerenciamento de Biblioteca",
+        "contact": {
+            "name": "Equipe de Suporte",
+            "email": "suporte@biblioteca.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/api/v1",
+            "description": "Servidor de API da Biblioteca"
+        }
+    ],
+    "paths": {
+        "/api/v1/books": {
+            "get": {
+                "tags": [
+                    "Livros"
+                ],
+                "summary": "Lista todos os livros",
+                "operationId": "8e67fc126a51598255c56d362d50466e",
+                "responses": {
+                    "200": {
+                        "description": "Lista de livros",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Book"
+                                            }
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Livros"
+                ],
+                "summary": "Criar novo livro",
+                "operationId": "6c5e00fe01c5e356fa95e728c3cfbc98",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BookCreateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Livro criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Book"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                }
+            }
+        },
+        "/api/v1/books/{id}": {
+            "get": {
+                "tags": [
+                    "Livros"
+                ],
+                "summary": "Obter detalhes de um livro específico",
+                "operationId": "22b313962ebfb68fe2f323a96dc9e91e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes do livro",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Book"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Livro não encontrado"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Livros"
+                ],
+                "summary": "Atualizar livro existente",
+                "operationId": "471e8ddd754c8f9e34e69f64d1b53eaa",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BookUpdateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Livro atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Book"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Livro não encontrado"
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Livros"
+                ],
+                "summary": "Remover livro",
+                "operationId": "e3e33d11e322f13055b10ead759d294c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Livro removido com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Livro não encontrado"
+                    }
+                }
+            }
+        },
+        "/api/v1/loans": {
+            "get": {
+                "tags": [
+                    "Empréstimos"
+                ],
+                "summary": "Lista todos os empréstimos",
+                "operationId": "11067bb9b862fd7effd5a9394c6aa29e",
+                "responses": {
+                    "200": {
+                        "description": "Lista de empréstimos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Loan"
+                                            }
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Empréstimos"
+                ],
+                "summary": "Criar novo empréstimo",
+                "operationId": "67746018747d878b72f133d469781040",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoanCreateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Empréstimo criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Loan"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Livro não disponível para empréstimo",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                }
+            }
+        },
+        "/api/v1/loans/{id}": {
+            "get": {
+                "tags": [
+                    "Empréstimos"
+                ],
+                "summary": "Obter detalhes de um empréstimo específico",
+                "operationId": "93e76696ff0b06ec950dd75e35c89c1b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes do empréstimo",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Loan"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Empréstimo não encontrado"
+                    }
+                }
+            }
+        },
+        "/api/v1/loans/{id}/return": {
+            "get": {
+                "tags": [
+                    "Empréstimos"
+                ],
+                "summary": "Devolver livro",
+                "operationId": "e26749263f5e4c0918cd8ab2acc646bc",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Livro devolvido com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Empréstimo não encontrado"
+                    }
+                }
+            }
+        },
+        "/api/v1/loans/{id}/mark-as-delayed": {
+            "get": {
+                "tags": [
+                    "Empréstimos"
+                ],
+                "summary": "Marcar empréstimo como atrasado",
+                "operationId": "f8311c4d96b4bfd9277f6faac2dd1e0b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Empréstimo marcado como atrasado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Empréstimo não encontrado"
+                    }
+                }
+            }
+        },
+        "/api/v1/users": {
+            "get": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Lista todos os usuários",
+                "operationId": "3ab81e3f9b24b4f36ab08d72349ac632",
+                "responses": {
+                    "200": {
+                        "description": "Lista de usuários",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/User"
+                                            }
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Criar novo usuário",
+                "operationId": "ba548b97148bb5c0d8cab3bc3f128bfd",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserCreateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuário criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/User"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                }
+            }
+        },
+        "/api/v1/users/{id}": {
+            "get": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Obter detalhes de um usuário específico",
+                "operationId": "daaf7a6169ee9348c3fddb07778598ff",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes do usuário",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/User"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Atualizar usuário existente",
+                "operationId": "59e98fba99e974815e27979dd58e2175",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserUpdateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Usuário atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/User"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado"
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Remover usuário",
+                "operationId": "c30c64b8b7730b65c7714c9af4a6f5fa",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Usuário removido com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado"
+                    }
+                }
+            }
+        },
+        "/api/v1/users/{id}/loans": {
+            "get": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Obter empréstimos do usuário",
+                "operationId": "911d1da132e024088323104de305a3e2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Empréstimos do usuário",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Loan"
+                                            }
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Book": {
+                "title": "Livro",
+                "description": "Modelo de livro",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Dom Quixote"
+                    },
+                    "author": {
+                        "type": "string",
+                        "example": "Miguel de Cervantes"
+                    },
+                    "registration_number": {
+                        "type": "string",
+                        "example": "LIVRO001"
+                    },
+                    "genre": {
+                        "type": "string",
+                        "example": "Ficção"
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "disponível"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "BookCreateRequest": {
+                "title": "Requisição de Criação de Livro",
+                "required": [
+                    "title",
+                    "author",
+                    "registration_number",
+                    "genre"
+                ],
+                "properties": {
+                    "title": {
+                        "description": "Título do livro",
+                        "type": "string",
+                        "example": "Dom Quixote"
+                    },
+                    "author": {
+                        "description": "Autor do livro",
+                        "type": "string",
+                        "example": "Miguel de Cervantes"
+                    },
+                    "registration_number": {
+                        "description": "Número de registro único do livro",
+                        "type": "string",
+                        "example": "LIVRO001"
+                    },
+                    "genre": {
+                        "description": "Gênero do livro",
+                        "type": "string",
+                        "example": "Ficção"
+                    }
+                },
+                "type": "object"
+            },
+            "BookUpdateRequest": {
+                "title": "Requisição de Atualização de Livro",
+                "properties": {
+                    "title": {
+                        "description": "Título do livro",
+                        "type": "string",
+                        "example": "Dom Quixote"
+                    },
+                    "author": {
+                        "description": "Autor do livro",
+                        "type": "string",
+                        "example": "Miguel de Cervantes"
+                    },
+                    "registration_number": {
+                        "description": "Número de registro único do livro",
+                        "type": "string",
+                        "example": "LIVRO001"
+                    },
+                    "genre": {
+                        "description": "Gênero do livro",
+                        "type": "string",
+                        "example": "Ficção"
+                    }
+                },
+                "type": "object"
+            },
+            "Loan": {
+                "title": "Empréstimo",
+                "description": "Modelo de empréstimo de livro",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "book_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "due_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2024-12-31"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "active",
+                            "delayed",
+                            "returned"
+                        ],
+                        "example": "active"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "LoanCreateRequest": {
+                "title": "Requisição de Criação de Empréstimo",
+                "required": [
+                    "user_id",
+                    "book_id"
+                ],
+                "properties": {
+                    "user_id": {
+                        "description": "ID do usuário que está fazendo o empréstimo",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "book_id": {
+                        "description": "ID do livro a ser emprestado",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "due_date": {
+                        "description": "Data de devolução (opcional)",
+                        "type": "string",
+                        "format": "date",
+                        "example": "2024-12-31"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "title": "Usuário",
+                "description": "Modelo de usuário da biblioteca",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Luis Henrique"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "luis@example.com"
+                    },
+                    "registration_number": {
+                        "type": "string",
+                        "example": "REG123"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "UserCreateRequest": {
+                "title": "Requisição de Criação de Usuário",
+                "required": [
+                    "name",
+                    "email",
+                    "registration_number",
+                    "password"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "Nome completo do usuário",
+                        "type": "string",
+                        "example": "Luis Henrique"
+                    },
+                    "email": {
+                        "description": "Endereço de email do usuário",
+                        "type": "string",
+                        "format": "email",
+                        "example": "luis@example.com"
+                    },
+                    "registration_number": {
+                        "description": "Número de registro único do usuário",
+                        "type": "string",
+                        "example": "REG12345"
+                    },
+                    "password": {
+                        "description": "Senha do usuário",
+                        "type": "string",
+                        "format": "password",
+                        "example": "senha123"
+                    }
+                },
+                "type": "object"
+            },
+            "UserUpdateRequest": {
+                "title": "Requisição de Atualização de Usuário",
+                "properties": {
+                    "name": {
+                        "description": "Nome completo do usuário",
+                        "type": "string",
+                        "example": "Luis Henrique"
+                    },
+                    "email": {
+                        "description": "Endereço de email do usuário",
+                        "type": "string",
+                        "format": "email",
+                        "example": "luis@example.com"
+                    },
+                    "registration_number": {
+                        "description": "Número de registro único do usuário",
+                        "type": "string",
+                        "example": "REG12345"
+                    },
+                    "password": {
+                        "description": "Nova senha do usuário (opcional)",
+                        "type": "string",
+                        "format": "password",
+                        "example": "novaSenha123"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Livros",
+            "description": "Livros"
+        },
+        {
+            "name": "Empréstimos",
+            "description": "Empréstimos"
+        },
+        {
+            "name": "Usuários",
+            "description": "Usuários"
+        }
+    ]
+}

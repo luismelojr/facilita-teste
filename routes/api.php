@@ -8,15 +8,15 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')->group(function () {
     // User routes
     Route::apiResource('users', UserController::class);
+    Route::get('users/{id}/loans', [UserController::class, 'loans'])->name('users.loans');
 
     // Book routes
     Route::apiResource('books', BookController::class);
-    Route::get('books/search', [BookController::class, 'search'])->name('books.search');
-    Route::get('books/by-genre/{genre}', [BookController::class, 'getByGenre'])->name('books.by-genre');
 
     // Loan routes
-    Route::apiResource('loans', LoanController::class);
-    Route::post('loans/{id}/return', [LoanController::class, 'returnBook'])->name('loans.return');
-    Route::post('loans/{id}/extend', [LoanController::class, 'extendLoan'])->name('loans.extend');
-    Route::get('loans/overdue', [LoanController::class, 'getOverdueLoans'])->name('loans.overdue');
+    Route::apiResource('loans', LoanController::class)->except([
+        'update', 'destroy'
+    ]);
+    Route::get('loans/{id}/return', [LoanController::class, 'returnBook'])->name('loans.return');
+    Route::get('/loans/{id}/delay', [LoanController::class, 'markAsDelayed'])->name('loans.delay');
 });

@@ -29,9 +29,29 @@ class LoanController extends Controller
     }
 
     /**
-     * Listar todos os empréstimos
-     *
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/api/v1/loans",
+     *     summary="Lista todos os empréstimos",
+     *     tags={"Empréstimos"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de empréstimos",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/Loan")
+     *             ),
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="success", type="boolean")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erro interno do servidor"
+     *     )
+     * )
      */
     public function index(): JsonResponse
     {
@@ -45,10 +65,31 @@ class LoanController extends Controller
     }
 
     /**
-     * Obter empréstimo específico
-     *
-     * @param int $id
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/api/v1/loans/{id}",
+     *     summary="Obter detalhes de um empréstimo específico",
+     *     tags={"Empréstimos"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Detalhes do empréstimo",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", ref="#/components/schemas/Loan"),
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="success", type="boolean")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Empréstimo não encontrado"
+     *     )
+     * )
      */
     public function show(int $id): JsonResponse
     {
@@ -62,10 +103,38 @@ class LoanController extends Controller
     }
 
     /**
-     * Criar novo empréstimo
-     *
-     * @param LoanStoreRequest $request
-     * @return JsonResponse
+     * @OA\Post(
+     *     path="/api/v1/loans",
+     *     summary="Criar novo empréstimo",
+     *     tags={"Empréstimos"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/LoanCreateRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Empréstimo criado com sucesso",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", ref="#/components/schemas/Loan"),
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="success", type="boolean")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Livro não disponível para empréstimo",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="success", type="boolean")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erro de validação"
+     *     )
+     * )
      */
     public function store(LoanStoreRequest $request): JsonResponse
     {
@@ -98,42 +167,30 @@ class LoanController extends Controller
     }
 
     /**
-     * Atualizar status do empréstimo
-     *
-     * @param LoanUpdateRequest $request
-     * @param int $id
-     * @return JsonResponse
-     */
-    public function update(LoanUpdateRequest $request, int $id): JsonResponse
-    {
-        $data = $request->validated();
-
-        if (isset($data['due_date'])) {
-            $loan = $this->loanService->getLoanById($id);
-            $currentDueDate = Carbon::parse($loan->due_date);
-            $newDueDate = Carbon::parse($data['due_date']);
-
-            $daysToExtend = $currentDueDate->diffInDays($newDueDate);
-
-            if ($daysToExtend > 0) {
-                $this->loanService->extendLoan($id, $daysToExtend);
-            }
-        }
-
-        $loan = $this->loanService->getLoanById($id);
-
-        return response()->json([
-            'data' => $loan,
-            'message' => 'Empréstimo atualizado com sucesso',
-            'success' => true
-        ]);
-    }
-
-    /**
-     * Devolver livro
-     *
-     * @param int $id
-     * @return JsonResponse
+     * @OA\GET(
+     *     path="/api/v1/loans/{id}/return",
+     *     summary="Devolver livro",
+     *     tags={"Empréstimos"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Livro devolvido com sucesso",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="success", type="boolean")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Empréstimo não encontrado"
+     *     )
+     * )
      */
     public function returnBook(int $id): JsonResponse
     {
@@ -146,40 +203,37 @@ class LoanController extends Controller
     }
 
     /**
-     * Obter empréstimos atrasados
-     *
-     * @return JsonResponse
+     * @OA\GET(
+     *     path="/api/v1/loans/{id}/mark-as-delayed",
+     *     summary="Marcar empréstimo como atrasado",
+     *     tags={"Empréstimos"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Empréstimo marcado como atrasado",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="success", type="boolean")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Empréstimo não encontrado"
+     *     )
+     * )
      */
-    public function delayed(): JsonResponse
+    public function markAsDelayed(int $id): JsonResponse
     {
-        $loans = $this->loanService->getDelayedLoans();
+        $this->loanService->markAsDelayed($id);
 
         return response()->json([
-            'data' => $loans,
-            'message' => 'Empréstimos atrasados obtidos com sucesso',
-            'success' => true
-        ]);
-    }
-
-    /**
-     * Prorrogar empréstimo
-     *
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse
-     */
-    public function extend(Request $request, int $id): JsonResponse
-    {
-        $request->validate([
-            'days' => 'required|integer|min:1|max:30'
-        ]);
-
-        $this->loanService->extendLoan($id, $request->input('days'));
-        $loan = $this->loanService->getLoanById($id);
-
-        return response()->json([
-            'data' => $loan,
-            'message' => 'Empréstimo prorrogado com sucesso',
+            'message' => 'Empréstimo marcado como atrasado',
             'success' => true
         ]);
     }

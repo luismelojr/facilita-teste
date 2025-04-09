@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\DTO\BookDTO;
-use App\Enums\BookGenreEnum;
 use App\Http\Requests\BookStoreRequest;
 use App\Http\Requests\BookUpdateRequest;
 use App\Services\BookService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class BookController extends Controller
@@ -29,9 +27,29 @@ class BookController extends Controller
     }
 
     /**
-     * Listar todos os livros
-     *
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/api/v1/books",
+     *     summary="Lista todos os livros",
+     *     tags={"Livros"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de livros",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/Book")
+     *             ),
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="success", type="boolean")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erro interno do servidor"
+     *     )
+     * )
      */
     public function index(): JsonResponse
     {
@@ -45,10 +63,31 @@ class BookController extends Controller
     }
 
     /**
-     * Obter livro específico
-     *
-     * @param int $id
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/api/v1/books/{id}",
+     *     summary="Obter detalhes de um livro específico",
+     *     tags={"Livros"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Detalhes do livro",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", ref="#/components/schemas/Book"),
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="success", type="boolean")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Livro não encontrado"
+     *     )
+     * )
      */
     public function show(int $id): JsonResponse
     {
@@ -62,10 +101,29 @@ class BookController extends Controller
     }
 
     /**
-     * Criar novo livro
-     *
-     * @param BookStoreRequest $request
-     * @return JsonResponse
+     * @OA\Post(
+     *     path="/api/v1/books",
+     *     summary="Criar novo livro",
+     *     tags={"Livros"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/BookCreateRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Livro criado com sucesso",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", ref="#/components/schemas/Book"),
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="success", type="boolean")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erro de validação"
+     *     )
+     * )
      */
     public function store(BookStoreRequest $request): JsonResponse
     {
@@ -80,11 +138,39 @@ class BookController extends Controller
     }
 
     /**
-     * Atualizar livro existente
-     *
-     * @param BookUpdateRequest $request
-     * @param int $id
-     * @return JsonResponse
+     * @OA\Put(
+     *     path="/api/v1/books/{id}",
+     *     summary="Atualizar livro existente",
+     *     tags={"Livros"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/BookUpdateRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Livro atualizado com sucesso",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", ref="#/components/schemas/Book"),
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="success", type="boolean")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Livro não encontrado"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erro de validação"
+     *     )
+     * )
      */
     public function update(BookUpdateRequest $request, int $id): JsonResponse
     {
@@ -101,10 +187,30 @@ class BookController extends Controller
     }
 
     /**
-     * Remover livro
-     *
-     * @param int $id
-     * @return JsonResponse
+     * @OA\Delete(
+     *     path="/api/v1/books/{id}",
+     *     summary="Remover livro",
+     *     tags={"Livros"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Livro removido com sucesso",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="success", type="boolean")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Livro não encontrado"
+     *     )
+     * )
      */
     public function destroy(int $id): JsonResponse
     {
@@ -112,60 +218,6 @@ class BookController extends Controller
 
         return response()->json([
             'message' => 'Livro removido com sucesso',
-            'success' => true
-        ]);
-    }
-
-    /**
-     * Obter livros disponíveis
-     *
-     * @return JsonResponse
-     */
-    public function available(): JsonResponse
-    {
-        $books = $this->bookService->getAvailableBooks();
-
-        return response()->json([
-            'data' => $books,
-            'message' => 'Livros disponíveis obtidos com sucesso',
-            'success' => true
-        ]);
-    }
-
-    /**
-     * Obter livros por gênero
-     *
-     * @param string $genre
-     * @return JsonResponse
-     */
-    public function byGenre(string $genre): JsonResponse
-    {
-        $books = $this->bookService->getBooksByGenre(BookGenreEnum::from($genre));
-
-        return response()->json([
-            'data' => $books,
-            'message' => 'Livros por gênero obtidos com sucesso',
-            'success' => true
-        ]);
-    }
-
-    /**
-     * Pesquisar livros
-     *
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function search(Request $request): JsonResponse
-    {
-        $request->validate([
-            'q' => 'required|string|min:3'
-        ]);
-
-        $books = $this->bookService->searchBooks($request->input('q'));
-
-        return response()->json([
-            'data' => $books,
-            'message' => 'Busca realizada com sucesso',
             'success' => true
         ]);
     }
