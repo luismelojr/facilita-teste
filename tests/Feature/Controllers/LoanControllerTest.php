@@ -199,7 +199,7 @@ class LoanControllerTest extends TestCase
         ]);
 
         // Act
-        $response = $this->postJson("/api/v1/loans/{$loan->id}/return");
+        $response = $this->getJson("/api/v1/loans/{$loan->id}/return");
 
         // Assert
         $response->assertStatus(200)

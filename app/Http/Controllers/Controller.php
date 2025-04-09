@@ -8,7 +8,7 @@ namespace App\Http\Controllers;
  *     version="1.0.0",
  *     description="Sistema de Gerenciamento de Biblioteca",
  *     @OA\Contact(
- *         email="suporte@biblioteca.com",
+ *         email="junimhs10@gmail.com",
  *         name="Equipe de Suporte"
  *     )
  * )
