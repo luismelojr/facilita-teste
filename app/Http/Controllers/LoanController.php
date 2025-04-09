@@ -108,10 +108,16 @@ class LoanController extends Controller
     {
         $data = $request->validated();
 
-        // Se o request inclui uma data de devolução
         if (isset($data['due_date'])) {
-            $dueDate = Carbon::parse($data['due_date']);
-            $this->loanService->extendLoan($id, $dueDate->diffInDays(Carbon::now()));
+            $loan = $this->loanService->getLoanById($id);
+            $currentDueDate = Carbon::parse($loan->due_date);
+            $newDueDate = Carbon::parse($data['due_date']);
+
+            $daysToExtend = $currentDueDate->diffInDays($newDueDate);
+
+            if ($daysToExtend > 0) {
+                $this->loanService->extendLoan($id, $daysToExtend);
+            }
         }
 
         $loan = $this->loanService->getLoanById($id);

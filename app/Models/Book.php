@@ -25,8 +25,23 @@ class Book extends Model
         'status' => BookStatusEnum::class
     ];
 
+    /**
+     * Relacionamento com o modelo de empréstimo.
+     *
+     * @return HasMany
+     */
     public function loans(): HasMany
     {
         return $this->hasMany(Loan::class);
+    }
+
+    /**
+     * Verifica se o livro está disponível para empréstimo.
+     *
+     * @return bool
+     */
+    public function isAvailable(): bool
+    {
+        return $this->status === BookStatusEnum::AVAILABLE;
     }
 }
